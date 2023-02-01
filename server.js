@@ -1,0 +1,18 @@
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+dotenv.config({path: "./Config/config.env"})
+const app = require("./app")
+
+const DB = process.env.DATABASE;
+
+mongoose.set("strictQuery", true);
+mongoose.connect(DB,{
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then( ()=>{
+    console.log("MongoDB is Connected")
+});
+
+app.listen(process.env.PORT || 4000,()=>{
+    console.log("Server is Connected")
+})
