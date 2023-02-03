@@ -45,6 +45,8 @@ const adminSchema = new mongoose.Schema({
         type: String,
         default: false
     }
+},{
+    timestamps: true
 });
 
 const AdminSchema = mongoose.model("Admin", adminSchema)

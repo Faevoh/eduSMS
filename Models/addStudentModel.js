@@ -45,6 +45,8 @@ const addStudent = new mongoose.Schema({
     cloudId: {
         type: String
     }
+},{
+    timestamps: true
 });
 
 const AddStudent = mongoose.model("addStudent", addStudent)
