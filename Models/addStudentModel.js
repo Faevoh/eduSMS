@@ -41,6 +41,9 @@ const addStudent = new mongoose.Schema({
     isVerified: {
         type: String,
         default: false
+    },
+    cloudId: {
+        type: String
     }
 });
 

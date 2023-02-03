@@ -1,4 +1,5 @@
 const AddStudent = require("../Models/addStudentModel");
+const cloudinary = require("../Utils/cloudinary");
 const emailSender = require("../Utils/email");
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken")

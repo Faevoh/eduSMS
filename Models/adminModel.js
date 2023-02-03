@@ -19,6 +19,9 @@ const adminSchema = new mongoose.Schema({
     image: {
         type: String
     },
+    cloudId: {
+        type: String
+    },
     address: {
         type: String
     },
