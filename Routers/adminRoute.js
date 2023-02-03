@@ -1,5 +1,5 @@
 const express = require("express");
-const{newAdmin, confirmVerify,adminLogin , updateImage} = require("../Controllers/adminController");
+const{newAdmin, confirmVerify,adminLogin} = require("../Controllers/adminController");
 const{newStudent,getAllStudents, deleteStudents,studentLogin, confirmVerified} = require("../Controllers/addStudent");
 const {roleAuth} = require("../Utils/authorization");
 
@@ -14,7 +14,7 @@ Route.route("/student/login").post(studentLogin);
 Route.route("/admin/:userid").post(roleAuth,newStudent);
 Route.route("/admin/allStudent/:userid").get(roleAuth,getAllStudents);
 Route.route("/admin/deleteStudent/:userid/:studentid").delete(roleAuth,deleteStudents);
-Route.route("/admin/image/:id").patch(updateImage);
+// Route.route("/admin/image/:id").patch(updateImage);
 
 
 

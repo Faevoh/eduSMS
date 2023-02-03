@@ -111,26 +111,25 @@ exports.adminLogin = async(req,res) => {
 //         });
 //     }
 // };
-exports.updateImage = async(req,res)=>{
-    // console.log("njmcvmckosl")
-    try{
-        const id = req.params.id;
-        const userId = await AdminSchema.findById(id);
+// exports.updateImage = async(req,res)=>{
+//     try{
+//         const id = req.params.id;
+//         const userId = await AdminSchema.findById(id);
         
-        const result = await cloudinary.uploader.upload(req.files.image.tempFilePath);
-       console.log(result)
-       const data = {
-        image : result.secure_id,
-        cloudId : result.public_id
-       }
-        const updatedProfile = await AdminSchema.findByIdAndUpdate(userId, data);
-            res.status(201).json({
-                message: "Successfully Updated Profile",
-                data: updatedProfile
-            });
-    }catch(e){
-        res.status(404).json({
-            message: e.message
-        });
-    }
-};
+//         const result = await cloudinary.uploader.upload(req.files.image.tempFilePath);
+//        console.log(result)
+//        const data = {
+//         image : result.secure_id,
+//         cloudId : result.public_id
+//        }
+//         const updatedProfile = await AdminSchema.findByIdAndUpdate(userId, data);
+//             res.status(201).json({
+//                 message: "Successfully Updated Profile",
+//                 data: updatedProfile
+//             });
+//     }catch(e){
+//         res.status(404).json({
+//             message: e.message
+//         });
+//     }
+// };
