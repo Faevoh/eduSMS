@@ -19,7 +19,7 @@ const addStudent = new mongoose.Schema({
     regNumber: {
         type: String
     },
-    class: {
+    studentClass: {
         type: String
     },
     admissionYear: {

@@ -26,7 +26,7 @@ const isSignIn = async (req,res,next)=>{
 
 const roleAuth = async(req,res,next)=>{
     isSignIn (req,res, ()=>{
-        if(req.user.role){
+        if(!req.user.role){
                 next()
         }else{
             res.status(403).json({

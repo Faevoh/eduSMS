@@ -1,14 +1,24 @@
 const AddStudent = require("../Models/addStudentModel");
+const emailSender = require("../Utils/email");
+const bcryptjs = require("bcryptjs");
+const jwt = require("jsonwebtoken")
 
 exports.newStudent = async(req,res)=>{
     try{
-        const {email, password} = req.body;
+        const {email, password,image,studentName,regNumber,studentClass,admissionYear, guardianPhoneNumber,DOB} = req.body;
         const salt = bcryptjs.genSaltSync(10);
         const hash = bcryptjs.hashSync(password, salt);
 
         const data = {
+            studentName,
             email,
-            password: hash
+            password: hash,
+            image,
+            regNumber,
+            studentClass,
+            admissionYear,
+            guardianPhoneNumber,
+            DOB
         }
         const createNewUser = new AddStudent(data);
         const userToken = jwt.sign({
@@ -20,7 +30,7 @@ exports.newStudent = async(req,res)=>{
         createNewUser.token = userToken;
         await createNewUser.save();
 
-        const userVerify = `${req.protocol}://${req.get("host")}/api/userVerify/${createNewUser._id}`;
+        const userVerify = `${req.protocol}://${req.get("host")}/api/verifyStudent/${createNewUser._id}`;
         const message = `You have been registered as New User in the Eduglobal Application.
         Thank you for registering with our app. Please click this link ${userVerify} to verify your account`
         emailSender({
@@ -31,7 +41,7 @@ exports.newStudent = async(req,res)=>{
 
         res.status(201).json({
             message: "New Student Added",
-            data: created
+            data: createNewUser
         });
     }catch(e){
         res.status(400).json({
@@ -40,14 +50,14 @@ exports.newStudent = async(req,res)=>{
     }
 };
 
-exports.confirmVerify = async(req,res)=>{
+exports.confirmVerified = async(req,res)=>{
     try{
-        const id = req.params.id;
+        const id = req.params.studentid;
         
         const user = await AddStudent.findById(id)
        
         await AddStudent.findByIdAndUpdate(
-            user.id,
+            user._id,
             {
                 isVerified : true
             },
@@ -85,6 +95,34 @@ exports.deleteStudents = async(req,res)=>{
         await AddStudent.findByIdAndDelete(studentid);
         res.send  ("Successfully Deleted")
     }catch(e){
+        res.status(404).json({
+            message: e.message
+        });
+    }
+};
+exports.studentLogin = async(req,res) => {
+    try{
+        const {email,password, role} = req.body
+        const check = await AddStudent.findOne({ email: email}); 
+        if(!check) return res.status(404).json({message: "Not Found"});
+        const IsPassword = await bcryptjs.compare(password, check.password)
+        if(!IsPassword) return res.status(404).json({message: "Email or Password incorrect"});
+        if(!check.role == 2) return res.status(400).json({message: "You are not a student, you cannot login"});
+
+        const myToken = jwt.sign({
+            id: check._id,
+            password: check.password,
+            role: check.role
+        }, process.env.JWT_TOKEN,{ expiresIn: "1d"});
+
+        check.token = myToken
+        await check.save();
+        
+        res.status(201).json({
+            message: "Successful",
+            data: check
+        });
+     }catch(e){
         res.status(404).json({
             message: e.message
         });

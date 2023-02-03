@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 
 exports.newAdmin = async(req,res)=>{
     try{
-        const {email, password} = req.body;
+        const {nameOfSchool,email, password,phoneNumber,image,address,targetLine,website,country} = req.body;
         const salt = bcryptjs.genSaltSync(10);
         const hash = bcryptjs.hashSync(password, salt);
 
