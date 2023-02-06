@@ -6,8 +6,10 @@ dotenv.config({path: "./config/config.env"});
 const isSignIn = async (req,res,next)=>{
     const userid = req.params.userid
     const user = await adminModel.findById(userid);
-
+    console.log(userid)
+    console.log(user)
     const authToken = user.token;
+    console.log((authToken))
     if(!authToken){
         res.status(401).json({
             message: "Not authorized"
@@ -21,12 +23,11 @@ const isSignIn = async (req,res,next)=>{
             next()
         }
     })
-
 }
 
 const roleAuth = async(req,res,next)=>{
     isSignIn (req,res, ()=>{
-        if(!req.user.role){
+        if(req.user.role === 0){
                 next()
         }else{
             res.status(403).json({
@@ -38,5 +39,6 @@ const roleAuth = async(req,res,next)=>{
 
 module.exports = {
     roleAuth
+    // isSignIn
 
 }

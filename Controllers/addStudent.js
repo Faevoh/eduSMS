@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken")
 
 exports.newStudent = async(req,res)=>{
     try{
-        const {email, password,image,studentName,regNumber,studentClass,admissionYear, guardianPhoneNumber,DOB} = req.body;
+        const {studentName,email, password,regNumber,studentClass,admissionYear, guardianPhoneNumber,DOB} = req.body;
         const salt = bcryptjs.genSaltSync(10);
         const hash = bcryptjs.hashSync(password, salt);
 
@@ -14,7 +14,6 @@ exports.newStudent = async(req,res)=>{
             studentName,
             email,
             password: hash,
-            image,
             regNumber,
             studentClass,
             admissionYear,
