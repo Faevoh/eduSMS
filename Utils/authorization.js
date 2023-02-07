@@ -23,12 +23,12 @@ const isSignIn = async (req,res,next)=>{
 
 const roleAuth = async(req,res,next)=>{
     isSignIn (req,res, ()=>{
-        if(req.User.isAdmin !== true){
-            res.status(403).json({
-                message: "you are not an admin"
-            });
+        if(req.User.isAdmin ){
+            next()
         }else{
-                next()
+                res.status(403).json({
+                    message: "you are not an admin"
+                });
         }
     });
 };

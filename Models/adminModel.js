@@ -16,7 +16,7 @@ const adminSchema = new mongoose.Schema({
     phoneNumber: {
         type: String
     },
-    image: {
+    schoolImage: {
         type: String
     },
     cloudId: {
