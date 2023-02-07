@@ -4,41 +4,36 @@ const dotenv = require("dotenv");
 dotenv.config({path: "./config/config.env"});
 
 const isSignIn = async (req,res,next)=>{
-    const userid = req.params.userid
-    const user = await adminModel.findById(userid);
-    console.log(userid)
-    console.log(user)
-    const authToken = user.token;
-    console.log((authToken))
-    if(!authToken){
-        res.status(401).json({
-            message: "Not authorized"
-        });
-    }
-    jwt.verify(authToken, process.env.JWT_TOKEN, (err,payload)=>{
-        if(err){
-            res.status(401).json({message: err.message})
-        }else{
-            req.user = payload
-            next()
-        }
+    const userId = req.params.userId
+    const user = await adminModel.findById(userId)
+
+    if(!user) return res.status(404).json({message: "you are not admin"});
+
+    const Token = user.token
+
+    if(!Token) return res.status(403).json({message: "you are not authenticated"});
+    
+    jwt.verify(Token, process.env.JWT_TOKEN, (err, payload)=>{
+        if(err) return res.status(403).json({message: "token is not valid!"});
+
+        req.User = payload
+        next()
     })
-}
+};
 
 const roleAuth = async(req,res,next)=>{
     isSignIn (req,res, ()=>{
-        if(req.user.role === 0){
-                next()
-        }else{
+        if(req.User.isAdmin !== true){
             res.status(403).json({
                 message: "you are not an admin"
             });
+        }else{
+                next()
         }
     });
 };
 
 module.exports = {
     roleAuth
-    // isSignIn
 
 }

@@ -31,9 +31,9 @@ const addStudent = new mongoose.Schema({
     DOB: {
         type: String
     },
-    role: {
-        type: Number,
-        default: 2
+    isStudent: {
+        type: Boolean,
+        default: true
     },
     token: {
         type: String

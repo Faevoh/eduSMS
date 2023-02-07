@@ -15,10 +15,11 @@ exports.newAdmin = async(req,res)=>{
             password: hash
         }
         const createNewUser = new AdminSchema(data);
+        // console.log(createNewUser)
         const userToken = jwt.sign({
             id: createNewUser._id,
             password: createNewUser.password,
-            role: createNewUser.role
+            isAdmin: createNewUser.isAdmin
         }, process.env.JWT_TOKEN,{expiresIn: "1d"});
 
         createNewUser.token = userToken;
@@ -79,7 +80,7 @@ exports.adminLogin = async(req,res) => {
         const myToken = jwt.sign({
             id: check._id,
             password: check.password,
-            role: check.role
+            isAdmin: check.isAdmin
         }, process.env.JWT_TOKEN,{ expiresIn: "1d"});
 
         check.token = myToken

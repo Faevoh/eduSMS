@@ -34,9 +34,9 @@ const adminSchema = new mongoose.Schema({
     country: {
         type: String
     },
-    role: {
-        type: Number,
-        default: 0
+    isAdmin: {
+        type: Boolean,
+        default: true
     },
     token: {
         type: String
