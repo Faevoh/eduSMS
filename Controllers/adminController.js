@@ -1,17 +1,24 @@
 const AdminSchema = require("../Models/adminModel");
 const emailSender = require("../Utils/email");
 const cloudinary = require("../Utils/cloudinary");
-// const {tempFilePath} = require("express-fileupload")
+const fs = require("fs");
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 exports.newAdmin = async(req,res)=>{
     try{
-        const {nameOfSchool,email, password,phoneNumber,image,address,targetLine,website,country} = req.body;
+        const {nameOfSchool,email, password,phoneNumber,schoolImage,address,targetLine,website,country} = req.body;
         const salt = bcryptjs.genSaltSync(10);
         const hash = bcryptjs.hashSync(password, salt);
 
         const data = {
+            nameOfSchool,
+            phoneNumber,
+            address,
+            targetLine,
+            website,
+            country,
+            schoolImage,
             email,
             password: hash
         }
@@ -97,35 +104,35 @@ exports.adminLogin = async(req,res) => {
         });
     }
 };
-// exports.updateProfile = async(req,res)=>{
-//     try{
-//         const id = req.params.userid;
-//         const userId = await AdminSchema.findById(id);
-//         console.log(id)
-//         const result = await cloudinary.uploader.upload(req.files.schoolImage.tempFilePath);
-//         console.log(result)
+exports.updateProfile = async(req,res)=>{
+    try{
+        const id = req.params.userid;
+        const userId = await AdminSchema.findById(id);
+        // console.log(userId)
 
-//         const {nameOfSchool,phoneNumber,address,targetLine,website,country,schoolImage,cloudId} = req.body;
-//        const data ={
-//         nameOfSchool,
-//         phoneNumber,
-//         address,
-//         targetLine,
-//         website,
-//         country,
-//         schoolImage: result.secure_url,
-//         cloudId: result.public_id
-//        }
-//         const updatedProfile = await AdminSchema.findByIdAndUpdate(id,data)
-//         await data.save()
-//         res.status(201).json({
-//             message: "Successfully Updated Profile",
-//             data: updatedProfile
-//         });
+        const {nameOfSchool,phoneNumber,address,targetLine,website,country,schoolImage} = req.body;
+        const result = await cloudinary.uploader.upload(req.file.path);
+        const data ={
+         nameOfSchool,
+         phoneNumber,
+         address,
+         targetLine,
+         website,
+         country,
+         schoolImage: result.secure_url,
+         cloudId: result.public_id
+       }
+       
+        const updatedProfile = await AdminSchema.findByIdAndUpdate(userId, data)
         
-//     }catch(e){
-//         res.status(404).json({
-//             message: e.message
-//         });
-//     }
-// };
+        res.status(201).json({
+            message: "Successfully Updated Profile",
+            data: updatedProfile
+        });
+        
+    }catch(e){
+        res.status(404).json({
+            message: e.message
+        });
+    }
+};

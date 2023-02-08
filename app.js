@@ -11,11 +11,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use(fileUpload({
-    useTempFIles: true
-}));
+app.use(express.static("./adminLogo"))
+
 
 app.use("/api",admin);
+
+app.use("/uploaded-image", express.static(process.cwd() + "/adminLogo"));
 
 app.get("/", (req,res)=>{
     res.send("Welcome Message to Our Api")
